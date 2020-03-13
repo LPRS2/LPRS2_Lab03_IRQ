@@ -2,11 +2,11 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Mar 7, 2020 9:41:49 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1583613709178</BspGeneratedUnixTimeStamp>
-        <BspGeneratedLocation>/home/micuri/STEM/Computer_Engineering/LPRS2_Labs/LPRS2_Lab_02_Complex_MM/FW/nios2_lprs2_pio_7segm_timer_bsp</BspGeneratedLocation>
+        <BspGeneratedTimeStamp>Mar 13, 2020 2:46:55 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1584107215868</BspGeneratedUnixTimeStamp>
+        <BspGeneratedLocation>/home/micuri/STEM/Computer_Engineering/LPRS2_Labs/LPRS2_Lab03_IRQ/FW/nios2_lprs2_pio_7segm_timer_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
-        <SopcDesignFile>../../FPGA/nios2_custom_pio/nios2_custom_pio_qsys.sopcinfo</SopcDesignFile>
+        <SopcDesignFile>../../FPGA/nios2_lprs2_pio_7segm_timer/nios2_lprs2_pio_7segm_timer_qsys.sopcinfo</SopcDesignFile>
         <JdiFile>default</JdiFile>
         <Cpu>nios2_cpu</Cpu>
         <SchemaVersion>1.9</SchemaVersion>
@@ -919,6 +919,18 @@
         <MemoryMap>
                 <slaveDescriptor>sw_and_led_pio</slaveDescriptor>
                 <addressRange>0x0000A000 - 0x0000A03F</addressRange>
+                <addressSpan>64</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>time_muxed_7segm</slaveDescriptor>
+                <addressRange>0x0000A100 - 0x0000A13F</addressRange>
+                <addressSpan>64</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>lprs2_timer_0</slaveDescriptor>
+                <addressRange>0x0000A200 - 0x0000A23F</addressRange>
                 <addressSpan>64</addressSpan>
                 <attributes/>
         </MemoryMap>
