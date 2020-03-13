@@ -15,10 +15,12 @@ static volatile uint32_t* timer = (volatile uint32_t*)TIMER_BASE;
 static void timer_isr( void * context) {
 	static uint8_t x = 0;
 	x++;
-	pio[8] = 0xff;
+	pio[8] = x;
+	timer[0] = 0;
 }
 
 int main() {
+	printf("%d\n", alt_ic_irq_enabled(TIMER_IRQ_INTERRUPT_CONTROLLER_ID, TIMER_IRQ));
 	// Init IRQ.
 	alt_ic_isr_register(
 		TIMER_IRQ_INTERRUPT_CONTROLLER_ID, //alt_u32 ic_id
@@ -27,15 +29,24 @@ int main() {
 		NULL, //void *isr_context
 		NULL //void *flags
 	);
+	//alt_ic_irq_enable(TIMER_IRQ_INTERRUPT_CONTROLLER_ID, TIMER_IRQ);
+	printf("status = 0x%08x\n", __builtin_rdctl(0));
+
+	printf("%d\n", alt_ic_irq_enabled(TIMER_IRQ_INTERRUPT_CONTROLLER_ID, TIMER_IRQ));
 
 
+	printf("alt_irq_pending() = 0x%08x\n", alt_irq_pending());
 	printf("pio[8] = 0x%08x\n", pio[8]);
 	printf("\n");
 
+	pio[8] = 0x81;
+
+#if 0
 	printf("timer[0]:\n");
-	for(int i = 0; i < 10000; i++){
+	for(int i = 0; i < 1000; i++){
 		printf("%9d\n", timer[0]);
 	}
+#endif
 
 	return 0;
 }

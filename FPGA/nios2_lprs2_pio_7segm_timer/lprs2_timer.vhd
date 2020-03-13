@@ -47,6 +47,18 @@ begin
 	
 	avs_readdata <= cnt;
 	
-	ins_tc <= tc;
+	--ins_tc <= '1' when cnt < 1000 else '0';
+	process(clk, reset)
+	begin
+		if reset = '1' then
+			ins_tc <= '0';
+		elsif rising_edge(clk) then
+			if tc = '1' then
+				ins_tc <= '1';
+			elsif avs_chipselect = '1' and avs_write = '1' and avs_address = 0 then
+				ins_tc <= '0';
+			end if;
+		end if;
+	end process;
 
 end architecture;
