@@ -139,10 +139,10 @@ ACDS_VERSION := 18.0
 # Define path to the application ELF. 
 # It may be used by the makefile fragments so is defined before including them. 
 # 
-ELF := custom_pio_01_playground.elf
+ELF := irq_01_playground.elf
 
 # Paths to C, C++, and assembly source files.
-C_SRCS := custom_pio_01_playground.c
+C_SRCS := irq_01_playground.c
 CXX_SRCS :=
 ASM_SRCS :=
 

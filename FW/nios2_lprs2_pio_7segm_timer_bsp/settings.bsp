@@ -4,7 +4,7 @@
         <BspVersion>default</BspVersion>
         <BspGeneratedTimeStamp>Mar 7, 2020 9:41:49 PM</BspGeneratedTimeStamp>
         <BspGeneratedUnixTimeStamp>1583613709178</BspGeneratedUnixTimeStamp>
-        <BspGeneratedLocation>/home/micuri/STEM/Computer_Engineering/LPRS2_Labs/LPRS2_Lab_02_Complex_MM/FW/nios2_custom_pio_bsp</BspGeneratedLocation>
+        <BspGeneratedLocation>/home/micuri/STEM/Computer_Engineering/LPRS2_Labs/LPRS2_Lab_02_Complex_MM/FW/nios2_lprs2_pio_7segm_timer_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>../../FPGA/nios2_custom_pio/nios2_custom_pio_qsys.sopcinfo</SopcDesignFile>
         <JdiFile>default</JdiFile>
