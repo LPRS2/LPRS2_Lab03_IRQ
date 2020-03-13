@@ -15,7 +15,7 @@ static volatile uint32_t* timer = (volatile uint32_t*)TIMER_BASE;
 static void timer_isr( void * context) {
 	static uint8_t x = 0;
 	x++;
-	pio[8] = x;
+	pio[8] = 0xff;
 }
 
 int main() {
@@ -28,8 +28,14 @@ int main() {
 		NULL //void *flags
 	);
 
+
 	printf("pio[8] = 0x%08x\n", pio[8]);
 	printf("\n");
+
+	printf("timer[0]:\n");
+	for(int i = 0; i < 10000; i++){
+		printf("%9d\n", timer[0]);
+	}
 
 	return 0;
 }
