@@ -19,7 +19,7 @@ import waflib
 
 ###############################################################################
 
-APPNAME = 'LPRS2_Lab02_Advance_MM'
+APPNAME = 'LPRS2_Lab03_IRQ'
 
 top = '.'
 

@@ -27,4 +27,4 @@ DATE = "10:46:34  February 07, 2019"
 
 # Revisions
 
-PROJECT_REVISION = "nios2_custom_pio"
+PROJECT_REVISION = "nios2_irq"
