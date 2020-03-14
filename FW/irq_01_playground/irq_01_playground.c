@@ -23,9 +23,7 @@ static void timer_isr(void * context, alt_u32 id) {
 }
 
 int main() {
-	printf("%d\n", alt_ic_irq_enabled(TIMER_IRQ_INTERRUPT_CONTROLLER_ID, TIMER_IRQ));
 	// Init IRQ.
-	timer[0] = 8;
 	alt_ic_isr_register(
 		TIMER_IRQ_INTERRUPT_CONTROLLER_ID, //alt_u32 ic_id
 		TIMER_IRQ, //alt_u32 irq
@@ -33,21 +31,15 @@ int main() {
 		NULL, //void *isr_context
 		NULL //void *flags
 	);
-	//alt_ic_irq_enable(TIMER_IRQ_INTERRUPT_CONTROLLER_ID, TIMER_IRQ);
-	printf("status = 0x%08x\n", __builtin_rdctl(0));
 
-	printf("%d\n", alt_ic_irq_enabled(TIMER_IRQ_INTERRUPT_CONTROLLER_ID, TIMER_IRQ));
+	pio[8] = 0x81; // For debugging.
 
+	timer[1] = 12000000; // modulo.
+	timer[2] = 0; // Start it.
 
-	//printf("alt_irq_pending() = 0x%08x\n", alt_irq_pending());
-	printf("pio[8] = 0x%08x\n", pio[8]);
-	printf("\n");
-
-	pio[8] = 0x81;
-
-#if 0
-	printf("timer[0]:\n");
-	for(int i = 0; i < 1000; i++){
+#if 1
+	printf("timer cnt reg:\n");
+	for(int i = 0; i < 10; i++){
 		printf("%9d\n", timer[0]);
 	}
 #endif
