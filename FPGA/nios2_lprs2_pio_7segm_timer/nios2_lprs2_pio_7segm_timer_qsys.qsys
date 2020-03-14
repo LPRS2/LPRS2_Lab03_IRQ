@@ -471,7 +471,7 @@
    kind="altera_avalon_sysid_qsys"
    version="18.0"
    enabled="1">
-  <parameter name="id" value="-1162214912" />
+  <parameter name="id" value="-1162214656" />
  </module>
  <module name="time_muxed_7segm" kind="lprs2_7segm" version="1.0" enabled="1" />
  <module name="timer" kind="lprs2_timer" version="1.0" enabled="1" />
