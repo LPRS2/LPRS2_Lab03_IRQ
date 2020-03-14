@@ -9,16 +9,16 @@ library work;
 entity lprs2_pio is
 	port(
 		-- System.
-		clk              :  in std_logic;
-		reset            :  in std_logic;
+		clk              : in  std_logic;
+		reset            : in  std_logic;
 		
 		-- Avalon slave.
-		avs_chipselect   :  in std_logic;
+		avs_chipselect   : in  std_logic;
 		-- Word address.
-		avs_address      :  in std_logic_vector(3 downto 0);
-		avs_write        :  in std_logic;
-		avs_writedata    :  in std_logic_vector(31 downto 0);
-		avs_read         :  in std_logic;
+		avs_address      : in  std_logic_vector(3 downto 0);
+		avs_write        : in  std_logic;
+		avs_writedata    : in  std_logic_vector(31 downto 0);
+		avs_read         : in  std_logic;
 		avs_readdata     : out std_logic_vector(31 downto 0);
 		
 		-- Conduit.

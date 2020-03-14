@@ -9,16 +9,16 @@ library work;
 entity lprs2_timer is
 	port(
 		-- System.
-		clk              :  in std_logic;
-		reset            :  in std_logic;
+		clk              : in  std_logic;
+		reset            : in  std_logic;
 		
 		-- Avalon slave.
-		avs_chipselect   :  in std_logic;
+		avs_chipselect   : in  std_logic;
 		-- Word address.
-		avs_address      :  in std_logic_vector(3 downto 0);
-		avs_write        :  in std_logic;
-		avs_writedata    :  in std_logic_vector(31 downto 0);
-		avs_read         :  in std_logic;
+		avs_address      : in  std_logic_vector(3 downto 0);
+		avs_write        : in  std_logic;
+		avs_writedata    : in  std_logic_vector(31 downto 0);
+		avs_read         : in  std_logic;
 		avs_readdata     : out std_logic_vector(31 downto 0);
 		
 		-- IRQ.
@@ -32,6 +32,23 @@ architecture lprs2_timer_arch of lprs2_timer is
 	signal next_cnt : std_logic_vector(31 downto 0);
 	signal tc : std_logic;
 	signal irq_th : std_logic_vector(31 downto 0);
+	
+	
+	-- TODO Use entity.
+	component monostable_multivibrator is
+		generic(
+			DURATION_CLKS : natural := 8;
+			BITS : natural := 4
+		);
+		port(
+			i_clk            : in  std_logic;
+			i_rst            : in  std_logic;
+			
+			i_trigger        : in  std_logic;
+			
+			o_pulse          : out std_logic
+		);
+	end component;
 begin
 	
 	tc <= '1' when cnt = 12000000 else '0';
@@ -48,6 +65,15 @@ begin
 	
 	avs_readdata <= cnt;
 	
+	
+	irq_pulse_inst: component monostable_multivibrator
+	port map(
+		i_clk     => clk,
+		i_rst     => reset,
+		i_trigger => tc,
+		o_pulse   => ins_tc
+	);
+	
 	process(clk, reset)
 	begin
 		if reset = '1' then
@@ -59,7 +85,7 @@ begin
 		end if;
 	end process;
 	
-	ins_tc <= '1' when cnt < irq_th else '0';
+	--ins_tc <= '1' when cnt < irq_th else '0';
 	-- process(clk, reset)
 	-- begin
 	-- 	if reset = '1' then
