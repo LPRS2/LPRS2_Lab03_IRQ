@@ -177,7 +177,7 @@ CRT0 :=
 SYS_LIB :=
 
 # Define path to the root of the BSP.
-BSP_ROOT_DIR := ../nios2_lprs2_pio_7segm_timer_bsp
+BSP_ROOT_DIR := ../bsp_nios2_lprs2_pio_7segm_timer
 
 # List of application specific include directories, library directories and library names
 APP_INCLUDE_DIRS :=

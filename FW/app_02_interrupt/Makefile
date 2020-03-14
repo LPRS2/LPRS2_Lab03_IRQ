@@ -139,10 +139,10 @@ ACDS_VERSION := 18.0
 # Define path to the application ELF. 
 # It may be used by the makefile fragments so is defined before including them. 
 # 
-ELF := app_01_playground.elf
+ELF := app_02_interrupt.elf
 
 # Paths to C, C++, and assembly source files.
-C_SRCS := app_01_playground.c
+C_SRCS := app_02_interrupt.c
 CXX_SRCS :=
 ASM_SRCS :=
 
