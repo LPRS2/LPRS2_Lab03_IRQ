@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Mar 13, 2020 8:17:20 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1584127040460</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>Mar 14, 2020 7:28:30 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1584210510656</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>/home/micuri/STEM/Computer_Engineering/LPRS2_Labs/LPRS2_Lab03_IRQ/FW/nios2_lprs2_pio_7segm_timer_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>../../FPGA/nios2_lprs2_pio_7segm_timer/nios2_lprs2_pio_7segm_timer_qsys.sopcinfo</SopcDesignFile>
@@ -898,6 +898,150 @@
                 <Enabled>false</Enabled>
                 <Group xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
         </Setting>
+        <Setting>
+                <SettingName>altera_vic_driver.linker_section</SettingName>
+                <Identifier>altera_vic_driver_LINKER_SECTION</Identifier>
+                <Type>UnquotedString</Type>
+                <Value>.text</Value>
+                <DefaultValue>.text</DefaultValue>
+                <DestinationFile>system_h_define</DestinationFile>
+                <Description>Linker section for vector table(s) and funnel code. This memory section must connect to a data and instruction master of the CPU.</Description>
+                <Restrictions>none</Restrictions>
+                <Enabled>true</Enabled>
+                <Group>module_setting</Group>
+        </Setting>
+        <Setting>
+                <SettingName>altera_vic_driver.enable_preemption</SettingName>
+                <Identifier>altera_vic_driver_ISR_PREEMPTION_ENABLED</Identifier>
+                <Type>BooleanDefineOnly</Type>
+                <Value>1</Value>
+                <DefaultValue>1</DefaultValue>
+                <DestinationFile>system_h_define</DestinationFile>
+                <Description>Global Pre-emption: If all the device drivers in the BSP that have ISRs support pre-emption, this defaults to true, otherwise false. If true, it is safe to enable other pre-emption settings. If false, enabling other pre-emption settings could cause a malfunction. If true, defines the macro ALTERA_VIC_DRIVER_ISR_PREEMPTION_ENABLED in system.h and affects warning messages related to other pre-emption settings (it doesn't affect the BSP code).</Description>
+                <Restrictions>none</Restrictions>
+                <Enabled>true</Enabled>
+                <Group>module_setting</Group>
+        </Setting>
+        <Setting>
+                <SettingName>altera_vic_driver.enable_preemption_into_new_register_set</SettingName>
+                <Identifier>altera_vic_driver_PREEMPTION_INTO_NEW_REGISTER_SET_ENABLED</Identifier>
+                <Type>BooleanDefineOnly</Type>
+                <Value>0</Value>
+                <DefaultValue>0</DefaultValue>
+                <DestinationFile>system_h_define</DestinationFile>
+                <Description>New Register Set Pre-emption: Enables pre-emption for interrupt to a new register set. Allows a higher-priority interrupt to interrupt a lower-priority itnerrupt if they use different register sets. Enabling this setting results in a small increase in the average interrupt latency because it adds a small number of instructions to the ISR funnel. However, it provides a substantial improvement in worst-case interrupt latency. If true, defines the macro ALTERA_VIC_DRIVER_PREEMPTION_INTO_NEW_REGISTER_SET_ENABLED in system.h.</Description>
+                <Restrictions>none</Restrictions>
+                <Enabled>true</Enabled>
+                <Group>module_setting</Group>
+        </Setting>
+        <Setting>
+                <SettingName>altera_vic_driver.enable_preemption_rs_0</SettingName>
+                <Identifier>altera_vic_driver_ENABLE_PREEMPTION_RS_0</Identifier>
+                <Type>Boolean</Type>
+                <Value>0</Value>
+                <DefaultValue>0</DefaultValue>
+                <DestinationFile>system_h_define</DestinationFile>
+                <Description>Within Register Set Pre-emption: Enables pre-emption for interrupts within register set 0. Allows a higher-priority interrupt to interrupt a lower-priority interrupt even if they both use register set 0. Enabling this setting results in a substantial increase in the average interrupt latency for interrupts using register set 0 because it adds a significant number of instructions to the ISR funnel to save and restore registers. However, it provides a substantial improvement in worst-case interrupt latency. If true, defines the macro ALTERA_VIC_DRIVER_ENABLE_PREEMPTION_RS_0 in system.h.</Description>
+                <Restrictions>none</Restrictions>
+                <Enabled>true</Enabled>
+                <Group>module_setting</Group>
+        </Setting>
+        <Setting>
+                <SettingName>altera_vic_driver.enable_preemption_rs_1</SettingName>
+                <Identifier>altera_vic_driver_ENABLE_PREEMPTION_RS_1</Identifier>
+                <Type>Boolean</Type>
+                <Value>0</Value>
+                <DefaultValue>0</DefaultValue>
+                <DestinationFile>system_h_define</DestinationFile>
+                <Description>Within Register Set Pre-emption: Enables pre-emption for interrupts within register set 1. Allows a higher-priority interrupt to interrupt a lower-priority interrupt even if they both use register set 1. Enabling this setting results in a substantial increase in the average interrupt latency for interrupts using register set 1 because it adds a significant number of instructions to the ISR funnel to save and restore registers. However, it provides a substantial improvement in worst-case interrupt latency. If true, defines the macro ALTERA_VIC_DRIVER_ENABLE_PREEMPTION_RS_1 in system.h.</Description>
+                <Restrictions>none</Restrictions>
+                <Enabled>true</Enabled>
+                <Group>module_setting</Group>
+        </Setting>
+        <Setting>
+                <SettingName>altera_vic_driver.IRQ_CTRL.vec_size</SettingName>
+                <Identifier>IRQ_CTRL_VEC_SIZE</Identifier>
+                <Type>DecimalNumber</Type>
+                <Value>16</Value>
+                <DefaultValue>16</DefaultValue>
+                <DestinationFile>system_h_define</DestinationFile>
+                <Description>The number of bytes in each vector table entry. Supported values are 16, 32, 64, 128, 256 and 512.</Description>
+                <Restrictions>none</Restrictions>
+                <Enabled>true</Enabled>
+                <Group>module_setting</Group>
+        </Setting>
+        <Setting>
+                <SettingName>altera_vic_driver.IRQ_CTRL.irq0_rrs</SettingName>
+                <Identifier>altera_vic_driver_IRQ_CTRL_IRQ0_RRS</Identifier>
+                <Type>DecimalNumber</Type>
+                <Value>1</Value>
+                <DefaultValue>1</DefaultValue>
+                <DestinationFile>system_h_define</DestinationFile>
+                <Description>Requested register set (RRS) value for IRQ0 of 'irq_ctrl'</Description>
+                <Restrictions>none</Restrictions>
+                <Enabled>true</Enabled>
+                <Group>module_setting</Group>
+        </Setting>
+        <Setting>
+                <SettingName>altera_vic_driver.IRQ_CTRL.irq0_ril</SettingName>
+                <Identifier>altera_vic_driver_IRQ_CTRL_IRQ0_RIL</Identifier>
+                <Type>DecimalNumber</Type>
+                <Value>1</Value>
+                <DefaultValue>1</DefaultValue>
+                <DestinationFile>system_h_define</DestinationFile>
+                <Description>Requested interrupt level (RIL) value for IRQ0 of 'irq_ctrl.'  The greater the RIL value, the higher the priority.  To make effective use of the VIC interrupt setting defaults, assign your highest priority interrupts to low interrupt port numbers on the VIC closest to the processor.</Description>
+                <Restrictions>none</Restrictions>
+                <Enabled>true</Enabled>
+                <Group>module_setting</Group>
+        </Setting>
+        <Setting>
+                <SettingName>altera_vic_driver.IRQ_CTRL.irq0_rnmi</SettingName>
+                <Identifier>altera_vic_driver_IRQ_CTRL_IRQ0_RNMI</Identifier>
+                <Type>Boolean</Type>
+                <Value>0</Value>
+                <DefaultValue>0</DefaultValue>
+                <DestinationFile>system_h_define</DestinationFile>
+                <Description>Requested non-maskable interrupt (RNMI) value for IRQ0 of 'irq_ctrl'</Description>
+                <Restrictions>none</Restrictions>
+                <Enabled>true</Enabled>
+                <Group>module_setting</Group>
+        </Setting>
+        <Setting>
+                <SettingName>altera_vic_driver.IRQ_CTRL.irq1_rrs</SettingName>
+                <Identifier>altera_vic_driver_IRQ_CTRL_IRQ1_RRS</Identifier>
+                <Type>DecimalNumber</Type>
+                <Value>1</Value>
+                <DefaultValue>1</DefaultValue>
+                <DestinationFile>system_h_define</DestinationFile>
+                <Description>Requested register set (RRS) value for IRQ1 of 'irq_ctrl'</Description>
+                <Restrictions>none</Restrictions>
+                <Enabled>true</Enabled>
+                <Group>module_setting</Group>
+        </Setting>
+        <Setting>
+                <SettingName>altera_vic_driver.IRQ_CTRL.irq1_ril</SettingName>
+                <Identifier>altera_vic_driver_IRQ_CTRL_IRQ1_RIL</Identifier>
+                <Type>DecimalNumber</Type>
+                <Value>1</Value>
+                <DefaultValue>1</DefaultValue>
+                <DestinationFile>system_h_define</DestinationFile>
+                <Description>Requested interrupt level (RIL) value for IRQ1 of 'irq_ctrl.'  The greater the RIL value, the higher the priority.  To make effective use of the VIC interrupt setting defaults, assign your highest priority interrupts to low interrupt port numbers on the VIC closest to the processor.</Description>
+                <Restrictions>none</Restrictions>
+                <Enabled>true</Enabled>
+                <Group>module_setting</Group>
+        </Setting>
+        <Setting>
+                <SettingName>altera_vic_driver.IRQ_CTRL.irq1_rnmi</SettingName>
+                <Identifier>altera_vic_driver_IRQ_CTRL_IRQ1_RNMI</Identifier>
+                <Type>Boolean</Type>
+                <Value>0</Value>
+                <DefaultValue>0</DefaultValue>
+                <DestinationFile>system_h_define</DestinationFile>
+                <Description>Requested non-maskable interrupt (RNMI) value for IRQ1 of 'irq_ctrl'</Description>
+                <Restrictions>none</Restrictions>
+                <Enabled>true</Enabled>
+                <Group>module_setting</Group>
+        </Setting>
         <MemoryMap>
                 <slaveDescriptor>onchip_ram</slaveDescriptor>
                 <addressRange>0x00004000 - 0x00007FFF</addressRange>
@@ -912,9 +1056,15 @@
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>jtag_uart</slaveDescriptor>
-                <addressRange>0x00008400 - 0x00008407</addressRange>
+                <addressRange>0x00008100 - 0x00008107</addressRange>
                 <addressSpan>8</addressSpan>
                 <attributes>printable</attributes>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>irq_ctrl</slaveDescriptor>
+                <addressRange>0x00008400 - 0x000087FF</addressRange>
+                <addressSpan>1024</addressSpan>
+                <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>sw_and_led_pio</slaveDescriptor>

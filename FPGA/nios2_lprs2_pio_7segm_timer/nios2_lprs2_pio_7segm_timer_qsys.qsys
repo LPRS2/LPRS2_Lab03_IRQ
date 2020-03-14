@@ -17,11 +17,19 @@
          type = "int";
       }
    }
-   element jtag_uart
+   element irq_ctrl
    {
       datum _sortIndex
       {
          value = "5";
+         type = "int";
+      }
+   }
+   element jtag_uart
+   {
+      datum _sortIndex
+      {
+         value = "6";
          type = "int";
       }
    }
@@ -93,7 +101,7 @@
    {
       datum _sortIndex
       {
-         value = "6";
+         value = "7";
          type = "int";
       }
    }
@@ -117,7 +125,7 @@
    {
       datum _sortIndex
       {
-         value = "7";
+         value = "8";
          type = "int";
       }
    }
@@ -133,7 +141,7 @@
    {
       datum _sortIndex
       {
-         value = "8";
+         value = "9";
          type = "int";
       }
    }
@@ -188,6 +196,16 @@
   <parameter name="inputClockFrequency" value="0" />
   <parameter name="resetSynchronousEdges" value="NONE" />
  </module>
+ <module name="irq_ctrl" kind="altera_vic" version="18.0" enabled="1">
+  <parameter name="AUTO_DEVICE" value="10M16SAU169C8G" />
+  <parameter name="AUTO_DEVICE_FAMILY" value="MAX 10" />
+  <parameter name="AUTO_DEVICE_SPEEDGRADE" value="8" />
+  <parameter name="DAISY_CHAIN_ENABLE" value="0" />
+  <parameter name="INTERRUPT_LATENCY_CYCLES" value="2" />
+  <parameter name="NUMBER_OF_INT_PORTS" value="2" />
+  <parameter name="OVERRIDE_INTERRUPT_LATENCY" value="false" />
+  <parameter name="RIL_WIDTH" value="1" />
+ </module>
  <module
    name="jtag_uart"
    kind="altera_avalon_jtag_uart"
@@ -227,7 +245,7 @@
   <parameter name="dataAddrWidth" value="16" />
   <parameter name="dataMasterHighPerformanceAddrWidth" value="1" />
   <parameter name="dataMasterHighPerformanceMapParam" value="" />
-  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='onchip_ram.s1' start='0x4000' end='0x8000' type='altera_avalon_onchip_memory2.s1' /><slave name='sysid.control_slave' start='0x8000' end='0x8008' type='altera_avalon_sysid_qsys.control_slave' /><slave name='jtag_uart.avalon_jtag_slave' start='0x8400' end='0x8408' type='altera_avalon_jtag_uart.avalon_jtag_slave' /><slave name='nios2_cpu.debug_mem_slave' start='0x8800' end='0x9000' type='altera_nios2_gen2.debug_mem_slave' /><slave name='sw_and_led_pio.s1' start='0xA000' end='0xA040' type='lprs2_pio.s1' /><slave name='time_muxed_7segm.s1' start='0xA100' end='0xA140' type='lprs2_7segm.s1' /><slave name='timer.s1' start='0xA200' end='0xA240' type='lprs2_timer.s1' /></address-map>]]></parameter>
+  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='onchip_ram.s1' start='0x4000' end='0x8000' type='altera_avalon_onchip_memory2.s1' /><slave name='sysid.control_slave' start='0x8000' end='0x8008' type='altera_avalon_sysid_qsys.control_slave' /><slave name='jtag_uart.avalon_jtag_slave' start='0x8100' end='0x8108' type='altera_avalon_jtag_uart.avalon_jtag_slave' /><slave name='irq_ctrl.csr_access' start='0x8400' end='0x8800' type='altera_vic.csr_access' /><slave name='nios2_cpu.debug_mem_slave' start='0x8800' end='0x9000' type='altera_nios2_gen2.debug_mem_slave' /><slave name='sw_and_led_pio.s1' start='0xA000' end='0xA040' type='lprs2_pio.s1' /><slave name='time_muxed_7segm.s1' start='0xA100' end='0xA140' type='lprs2_7segm.s1' /><slave name='timer.s1' start='0xA200' end='0xA240' type='lprs2_timer.s1' /></address-map>]]></parameter>
   <parameter name="data_master_high_performance_paddr_base" value="0" />
   <parameter name="data_master_high_performance_paddr_size" value="0" />
   <parameter name="data_master_paddr_base" value="0" />
@@ -273,7 +291,7 @@
   <parameter name="instruction_master_high_performance_paddr_size" value="0" />
   <parameter name="instruction_master_paddr_base" value="0" />
   <parameter name="instruction_master_paddr_size" value="0" />
-  <parameter name="internalIrqMaskSystemInfo" value="3" />
+  <parameter name="internalIrqMaskSystemInfo" value="0" />
   <parameter name="io_regionbase" value="0" />
   <parameter name="io_regionsize" value="0" />
   <parameter name="master_addr_map" value="false" />
@@ -334,7 +352,7 @@
   <parameter name="setting_exportvectors" value="false" />
   <parameter name="setting_fast_register_read" value="false" />
   <parameter name="setting_ic_ecc_present" value="true" />
-  <parameter name="setting_interruptControllerType" value="Internal" />
+  <parameter name="setting_interruptControllerType" value="External" />
   <parameter name="setting_itcm_ecc_present" value="true" />
   <parameter name="setting_mmu_ecc_present" value="true" />
   <parameter name="setting_oci_export_jtag_signals" value="false" />
@@ -342,7 +360,7 @@
   <parameter name="setting_preciseIllegalMemAccessException" value="false" />
   <parameter name="setting_removeRAMinit" value="false" />
   <parameter name="setting_rf_ecc_present" value="true" />
-  <parameter name="setting_shadowRegisterSets" value="0" />
+  <parameter name="setting_shadowRegisterSets" value="1" />
   <parameter name="setting_showInternalSettings" value="false" />
   <parameter name="setting_showUnpublishedSettings" value="false" />
   <parameter name="setting_support31bitdcachebypass" value="true" />
@@ -463,7 +481,7 @@
    start="nios2_cpu.data_master"
    end="jtag_uart.avalon_jtag_slave">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x8400" />
+  <parameter name="baseAddress" value="0x8100" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -473,6 +491,15 @@
    end="sysid.control_slave">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x8000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="18.0"
+   start="nios2_cpu.data_master"
+   end="irq_ctrl.csr_access">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x8400" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -538,10 +565,16 @@
   <parameter name="baseAddress" value="0x4000" />
   <parameter name="defaultConnection" value="false" />
  </connection>
+ <connection
+   kind="avalon_streaming"
+   version="18.0"
+   start="irq_ctrl.interrupt_controller_out"
+   end="nios2_cpu.interrupt_controller_in" />
  <connection kind="clock" version="18.0" start="clk_buf.clk" end="nios2_cpu.clk" />
  <connection kind="clock" version="18.0" start="clk_buf.clk" end="sysid.clk" />
  <connection kind="clock" version="18.0" start="clk_buf.clk" end="rst_ctrl.clk" />
  <connection kind="clock" version="18.0" start="clk_buf.clk" end="jtag_uart.clk" />
+ <connection kind="clock" version="18.0" start="clk_buf.clk" end="irq_ctrl.clk" />
  <connection kind="clock" version="18.0" start="clk_buf.clk" end="onchip_ram.clk1" />
  <connection
    kind="clock"
@@ -557,11 +590,15 @@
  <connection
    kind="interrupt"
    version="18.0"
-   start="nios2_cpu.irq"
+   start="irq_ctrl.irq_input"
    end="jtag_uart.irq">
   <parameter name="irqNumber" value="0" />
  </connection>
- <connection kind="interrupt" version="18.0" start="nios2_cpu.irq" end="timer.irq">
+ <connection
+   kind="interrupt"
+   version="18.0"
+   start="irq_ctrl.irq_input"
+   end="timer.irq">
   <parameter name="irqNumber" value="1" />
  </connection>
  <connection
@@ -594,6 +631,11 @@
    version="18.0"
    start="clk_buf.clk_reset"
    end="timer.reset" />
+ <connection
+   kind="reset"
+   version="18.0"
+   start="clk_buf.clk_reset"
+   end="irq_ctrl.reset" />
  <connection
    kind="reset"
    version="18.0"

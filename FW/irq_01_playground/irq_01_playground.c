@@ -12,16 +12,20 @@ static volatile uint32_t* pio = (volatile uint32_t*)SW_AND_LED_PIO_BASE;
 static volatile uint32_t* digits = (volatile uint32_t*)TIME_MUXED_7SEGM_BASE;
 static volatile uint32_t* timer = (volatile uint32_t*)TIMER_BASE;
 
-static void timer_isr( void * context) {
+static void timer_isr(void * context, alt_u32 id) {
+	//timer[0] = 0;
 	static uint8_t x = 0;
 	x++;
+	if(x == 16){
+		x = 0;
+	}
 	pio[8] = x;
-	timer[0] = 0;
 }
 
 int main() {
 	printf("%d\n", alt_ic_irq_enabled(TIMER_IRQ_INTERRUPT_CONTROLLER_ID, TIMER_IRQ));
 	// Init IRQ.
+	timer[0] = 8;
 	alt_ic_isr_register(
 		TIMER_IRQ_INTERRUPT_CONTROLLER_ID, //alt_u32 ic_id
 		TIMER_IRQ, //alt_u32 irq
@@ -35,7 +39,7 @@ int main() {
 	printf("%d\n", alt_ic_irq_enabled(TIMER_IRQ_INTERRUPT_CONTROLLER_ID, TIMER_IRQ));
 
 
-	printf("alt_irq_pending() = 0x%08x\n", alt_irq_pending());
+	//printf("alt_irq_pending() = 0x%08x\n", alt_irq_pending());
 	printf("pio[8] = 0x%08x\n", pio[8]);
 	printf("\n");
 
