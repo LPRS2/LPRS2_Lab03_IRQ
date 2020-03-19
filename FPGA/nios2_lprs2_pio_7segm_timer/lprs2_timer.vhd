@@ -58,6 +58,8 @@ architecture lprs2_timer_arch of lprs2_timer is
 	signal wrap_flag : std_logic;
 	signal wrapped_flag : std_logic;
 	
+	
+	signal readdata : std_logic_vector(31 downto 0);
 begin
 	
 	wrap <= '1' when cnt_reg = modulo_reg else '0';
@@ -129,36 +131,49 @@ begin
 		wrapped_flag
 	)
 	begin
-		avs_readdata <= (others => '0');
-		case addr is
-			-- cnt
-			when x"00" =>
-				avs_readdata <= cnt_reg;
+		if avs_chipselect = '1' and avs_read = '1' then
+			readdata <= (others => '0');
+			case addr is
+				-- cnt
+				when x"00" =>
+					readdata <= cnt_reg;
+					
+				-- modulo_reg
+				when x"01" =>
+					readdata <= modulo_reg;
+					
+				-- flags
+				when x"02" =>
+					readdata(0) <= reset_flag;
+					readdata(1) <= pause_flag;
+					readdata(2) <= wrap_flag;
+					readdata(3) <= wrapped_flag;
 				
-			-- modulo_reg
-			when x"01" =>
-				avs_readdata <= modulo_reg;
-				
-			-- flags
-			when x"02" =>
-				avs_readdata(0) <= reset_flag;
-				avs_readdata(1) <= pause_flag;
-				avs_readdata(2) <= wrap_flag;
-				avs_readdata(3) <= wrapped_flag;
-			
-			-- unpacked flags
-			when x"04" =>
-				avs_readdata(0) <= reset_flag;
-			when x"05" =>
-				avs_readdata(0) <= pause_flag;
-			when x"06" =>
-				avs_readdata(0) <= wrap_flag;
-			when x"07" =>
-				avs_readdata(0) <= wrapped_flag;
+				-- unpacked flags
+				when x"04" =>
+					readdata(0) <= reset_flag;
+				when x"05" =>
+					readdata(0) <= pause_flag;
+				when x"06" =>
+					readdata(0) <= wrap_flag;
+				when x"07" =>
+					readdata(0) <= wrapped_flag;
 
-			when others =>
-				avs_readdata <= x"babadeda";
-		end case;
+				when others =>
+					readdata <= x"babadeda";
+			end case;
+		else
+			readdata <= x"deadbeef";
+		end if;
+	end process;
+	
+	process(clk, reset)
+	begin
+		if reset = '1' then
+			avs_readdata <= (others => '0');
+		elsif rising_edge(clk) then
+			avs_readdata <= readdata;
+		end if;
 	end process;
 	
 	irq_pulse_inst: component monostable_multivibrator
