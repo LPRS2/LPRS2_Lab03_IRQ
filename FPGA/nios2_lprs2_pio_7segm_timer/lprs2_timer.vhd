@@ -59,7 +59,7 @@ architecture lprs2_timer_arch of lprs2_timer is
 	signal wrapped_flag : std_logic;
 	
 	
-	signal readdata : std_logic_vector(31 downto 0);
+	signal wr : std_logic;
 begin
 	
 	wrap <= '1' when cnt_reg = modulo_reg else '0';
@@ -67,10 +67,10 @@ begin
 	reset_cnt <= (others => '0') when reset_flag = '1' else wrap_cnt;
 	next_cnt <= cnt_reg when pause_flag = '1' else reset_cnt;
 	
-	addr <= "00" & avs_address;
-	
 	wrap_flag <= wrap;
 	
+	addr <= "00" & avs_address;
+	wr <= avs_chipselect and avs_write;
 	process(clk, reset)
 	begin
 		if reset = '1' then
@@ -80,94 +80,74 @@ begin
 			pause_flag <= '1';
 			wrapped_flag <= '0';
 		elsif rising_edge(clk) then
-			if avs_chipselect = '1' and avs_write = '1' then
-				case addr is
-					-- cnt
-					when x"00" =>
+			-- Could be overriden below with writing to cnt_reg.
+			cnt_reg <= next_cnt;
+			
+			
+			-- Because flags.
+			avs_readdata <= (others => '0');
+			case addr is
+				-- cnt
+				when x"00" =>
+					avs_readdata <= cnt_reg;
+					if wr = '1' then
 						cnt_reg <= avs_writedata;
-						
-					-- modulo_reg
-					when x"01" =>
+					end if;
+					
+				-- modulo_reg
+				when x"01" =>
+					avs_readdata <= modulo_reg;
+					if wr = '1' then
 						modulo_reg <= avs_writedata;
-						
-					-- flags
-					when x"02" =>
+					end if;
+					
+				-- flags
+				when x"02" =>
+					avs_readdata(0) <= reset_flag;
+					avs_readdata(1) <= pause_flag;
+					avs_readdata(2) <= wrap_flag;
+					avs_readdata(3) <= wrapped_flag;
+					if wr = '1' then
 						reset_flag <= avs_writedata(0);
 						pause_flag <= avs_writedata(1);
 						-- wrap_flag is RO.
 						wrapped_flag <= avs_writedata(3);
-					
-					-- unpacked flags
-					when x"04" =>
-						reset_flag <= avs_writedata(0);
-					when x"05" =>
-						pause_flag <= avs_writedata(0);
-					when x"06" =>
-						-- wrap_flag is RO.
-						null;
-					when x"07" =>
-						wrapped_flag <= avs_writedata(0);
-							
-					when others =>
-						null;
-				end case;
-			else
-				cnt_reg <= next_cnt;
-				
-				if wrap = '1' then
-					wrapped_flag <= '1';
-				end if;
-			end if;
-		end if;
-	end process;
-	
-	process(
-		addr,
-		cnt_reg,
-		modulo_reg,
-		reset_flag,
-		pause_flag,
-		wrap_flag,
-		wrapped_flag
-	)
-	begin
-		if avs_chipselect = '1' and avs_read = '1' then
-			readdata <= (others => '0');
-			case addr is
-				-- cnt
-				when x"00" =>
-					readdata <= cnt_reg;
-					
-				-- modulo_reg
-				when x"01" =>
-					readdata <= modulo_reg;
-					
-				-- flags
-				when x"02" =>
-					readdata(0) <= reset_flag;
-					readdata(1) <= pause_flag;
-					readdata(2) <= wrap_flag;
-					readdata(3) <= wrapped_flag;
+					end if;
 				
 				-- unpacked flags
 				when x"04" =>
-					readdata(0) <= reset_flag;
+					avs_readdata(0) <= reset_flag;
+					if wr = '1' then
+						reset_flag <= avs_writedata(0);
+					end if;
 				when x"05" =>
-					readdata(0) <= pause_flag;
+					avs_readdata(0) <= pause_flag;
+					if wr = '1' then
+						pause_flag <= avs_writedata(0);
+					end if;
 				when x"06" =>
-					readdata(0) <= wrap_flag;
+					avs_readdata(0) <= wrap_flag;
+					-- wrap_flag is RO.
 				when x"07" =>
-					readdata(0) <= wrapped_flag;
-
+					avs_readdata(0) <= wrapped_flag;
+					if wr = '1' then
+						wrapped_flag <= avs_writedata(0);
+					end if;
+						
 				when others =>
-					readdata <= x"babadeda";
+					avs_readdata <= x"babadeda";
+					-- Other regs are RO.
 			end case;
-		else
-			readdata <= x"deadbeef";
+			
+			
+			-- After reg. write access, so would not loose setting of flag
+			-- if wrap happen at the same time
+			-- while SW is clearing wrappeg_flag in register.
+			if wrap = '1' then
+				wrapped_flag <= '1';
+			end if;
 		end if;
 	end process;
-	
-	avs_readdata <= readdata;
 	
 	irq_pulse_inst: component monostable_multivibrator
 	port map(
