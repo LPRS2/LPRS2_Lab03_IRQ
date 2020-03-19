@@ -167,14 +167,7 @@ begin
 		end if;
 	end process;
 	
-	process(clk, reset)
-	begin
-		if reset = '1' then
-			avs_readdata <= (others => '0');
-		elsif rising_edge(clk) then
-			avs_readdata <= readdata;
-		end if;
-	end process;
+	avs_readdata <= readdata;
 	
 	irq_pulse_inst: component monostable_multivibrator
 	port map(
