@@ -1,5 +1,4 @@
 
-
 #include <stdint.h>
 #include "system.h"
 #include "sys/alt_irq.h"
@@ -7,6 +6,18 @@
 
 #define WAIT_UNITL_FALSE(x) while((x)){}
 #define WAIT_UNITL_TRUE(x) while(!(x)){}
+
+#define pio_p32 ((volatile uint32_t*)SW_AND_LED_PIO_BASE)
+#define digits_p32 ((volatile uint32_t*)TIME_MUXED_7SEGM_BASE)
+#define timer_p32 ((volatile uint32_t*)TIMER_BASE)
+
+#define TIMER_CNT 0
+#define TIMER_MODULO 1
+#define TIMER_CTRL 2
+#define TIMER_RESET 4
+#define TIMER_PAUSE 5
+#define TIMER_WRAP 6
+#define TIMER_WRAPPED 7
 
 typedef struct {
 	// reg 0-7
@@ -25,9 +36,6 @@ typedef struct {
 	uint32_t babadeda[4];
 } bf_pio;
 #define pio (*((volatile bf_pio*)SW_AND_LED_PIO_BASE))
-
-static volatile uint32_t* digits = (volatile uint32_t*)TIME_MUXED_7SEGM_BASE;
-static volatile uint32_t* timer = (volatile uint32_t*)TIMER_BASE;
 
 static void timer_isr(void * context, alt_u32 id) {
 	static uint8_t x = 0;
@@ -48,13 +56,13 @@ int main() {
 	);
 
 
-	timer[1] = 12000000; // modulo.
-	timer[2] = 0; // Start it.
+	timer_p32[TIMER_MODULO] = 12000000; // modulo.
+	timer_p32[TIMER_CTRL_STATUS] = 0; // Start it.
 
 #if 1
-	printf("timer cnt reg:\n");
+	printf("timer_p32 cnt reg:\n");
 	for(int i = 0; i < 10; i++){
-		printf("%9d\n", timer[0]);
+		printf("%9d\n", timer_p32[0]);
 	}
 #endif
 
