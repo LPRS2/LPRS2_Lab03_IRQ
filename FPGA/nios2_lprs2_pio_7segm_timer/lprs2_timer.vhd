@@ -51,7 +51,9 @@ architecture lprs2_timer_arch of lprs2_timer is
 	signal reset_cnt : std_logic_vector(31 downto 0);
 	signal next_cnt : std_logic_vector(31 downto 0);
 	
-	signal addr : std_logic_vector(7 downto 0);
+	signal addr_ri    : std_logic_vector(3 downto 0);
+	signal addr_gr    : std_logic_vector(3 downto 0);
+	signal addr       : std_logic_vector(7 downto 0);
 	signal modulo_reg : std_logic_vector(31 downto 0);
 	signal reset_flag : std_logic;
 	signal pause_flag : std_logic;
@@ -68,8 +70,10 @@ begin
 	next_cnt <= cnt_reg when pause_flag = '1' else reset_cnt;
 	
 	wrap_flag <= wrap;
-	
-	addr <= "00" & avs_address;
+
+	addr_ri <= "0" & avs_address(2 downto 0);
+	addr_gr <= "00" & avs_address(4 downto 3);
+	addr <= addr_gr & addr_ri;
 	wr <= avs_chipselect and avs_write;
 	process(clk, reset)
 	begin
@@ -88,54 +92,75 @@ begin
 			avs_readdata <= (others => '0');
 			case addr is
 				-- cnt
-				when x"00" =>
+				when x"00" | x"10" =>
 					avs_readdata <= cnt_reg;
 					if wr = '1' then
 						cnt_reg <= avs_writedata;
 					end if;
 					
-				-- modulo_reg
-				when x"01" =>
+				-- modulo
+				when x"01" | x"13" =>
 					avs_readdata <= modulo_reg;
 					if wr = '1' then
 						modulo_reg <= avs_writedata;
 					end if;
-					
+				
+				--TODO If this work make some funs and const,
+				-- for nicer, less error prone layout.
 				-- flags
-				when x"02" =>
-					avs_readdata(0) <= reset_flag;
-					avs_readdata(1) <= pause_flag;
-					avs_readdata(2) <= wrap_flag;
-					avs_readdata(3) <= wrapped_flag;
-					if wr = '1' then
-						reset_flag <= avs_writedata(0);
-						pause_flag <= avs_writedata(1);
-						-- wrap_flag is RO.
-						wrapped_flag <= avs_writedata(3);
-					end if;
+				when x"02" | x"12" =>
+					case addr_gr is
+						when x"0" =>
+							avs_readdata(0) <= reset_flag;
+							avs_readdata(1) <= pause_flag;
+							avs_readdata(2) <= wrap_flag;
+							avs_readdata(3) <= wrapped_flag;
+							if wr = '1' then
+								reset_flag <= avs_writedata(0);
+								pause_flag <= avs_writedata(1);
+								-- wrap_flag is RO.
+								wrapped_flag <= avs_writedata(3);
+							end if;
+						when x"1" =>
+							avs_readdata(3) <= reset_flag;
+							avs_readdata(0) <= pause_flag;
+							avs_readdata(1) <= wrap_flag;
+							avs_readdata(2) <= wrapped_flag;
+							if wr = '1' then
+								reset_flag <= avs_writedata(3);
+								pause_flag <= avs_writedata(0);
+								-- wrap_flag is RO.
+								wrapped_flag <= avs_writedata(2);
+							end if;
+					end case;
+				
+				-- magic
+				when x"03" | x"11" =>
+					avs_readdata <= x"babadeda";
+					-- magic is RO.
 				
 				-- unpacked flags
-				when x"04" =>
+				when x"04" | x"17" =>
 					avs_readdata(0) <= reset_flag;
 					if wr = '1' then
 						reset_flag <= avs_writedata(0);
 					end if;
-				when x"05" =>
+				when x"05" | x"14" =>
 					avs_readdata(0) <= pause_flag;
 					if wr = '1' then
 						pause_flag <= avs_writedata(0);
 					end if;
-				when x"06" =>
+				when x"06" | x"15" =>
 					avs_readdata(0) <= wrap_flag;
 					-- wrap_flag is RO.
-				when x"07" =>
+				when x"07" | x"16" =>
 					avs_readdata(0) <= wrapped_flag;
 					if wr = '1' then
 						wrapped_flag <= avs_writedata(0);
 					end if;
 						
 				when others =>
-					avs_readdata <= x"babadeda";
+					avs_readdata <= x"deadbeef";
 					-- Other regs are RO.
 			end case;
 			
