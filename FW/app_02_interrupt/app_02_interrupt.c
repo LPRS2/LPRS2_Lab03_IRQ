@@ -13,7 +13,7 @@
 
 #define TIMER_CNT 0
 #define TIMER_MODULO 1
-#define TIMER_CTRL 2
+#define TIMER_CTRL_STAT 2
 #define TIMER_RESET 4
 #define TIMER_PAUSE 5
 #define TIMER_WRAP 6
@@ -37,7 +37,7 @@ typedef struct {
 } bf_pio;
 #define pio (*((volatile bf_pio*)SW_AND_LED_PIO_BASE))
 
-static void timer_isr(void * context, alt_u32 id) {
+static void timer_isr(void * context) {
 	static uint8_t x = 0;
 	x++;
 	pio.sw_led_packed = x;
@@ -57,7 +57,7 @@ int main() {
 
 
 	timer_p32[TIMER_MODULO] = 12000000; // modulo.
-	timer_p32[TIMER_CTRL_STATUS] = 0; // Start it.
+	timer_p32[TIMER_CTRL_STAT] = 0; // Start it.
 
 #if 1
 	printf("timer_p32 cnt reg:\n");
