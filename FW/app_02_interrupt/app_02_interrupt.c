@@ -12,7 +12,7 @@
 #define timer_p32 ((volatile uint32_t*)TIMER_BASE)
 
 #define TIMER_CNT 0
-#define TIMER_MODULO 3
+#define TIMER_MODULO 1
 #define TIMER_CTRL_STAT 2
 
 typedef struct {
