@@ -13,10 +13,6 @@
 #define TIMER_CNT 0
 #define TIMER_MODULO 1
 #define TIMER_CTRL_STATUS 2
-#define TIMER_RESET 4
-#define TIMER_PAUSE 5
-#define TIMER_WRAP 6
-#define TIMER_WRAPPED 7
 
 typedef struct {
 	// reg 0-7
