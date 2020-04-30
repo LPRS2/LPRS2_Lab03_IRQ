@@ -4,7 +4,7 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 use ieee.std_logic_arith.all;
 
-library work;
+library nios2_lprs2_pio_7segm_timer_qsys;
 
 entity lprs2_7segm is
 	port(
@@ -32,24 +32,6 @@ architecture lprs2_7segm_arch of lprs2_7segm is
 	-- TODO Is there way for Qsys to propagate this constant.
 	constant CLK_FREQ : positive := 12000000;
 	
-	-- TODO Use entity.
-	component counter is
-		generic(
-			-- Counter count in range [0, CNT_MOD) i.e. CNT_MOD clock periods.
-			constant CNT_MOD  : positive;
-			constant CNT_BITS : positive
-		);
-		port(
-			i_clk  : in  std_logic;
-			in_rst : in  std_logic;
-			
-			i_rst  : in  std_logic;
-			i_en   : in  std_logic;
-			o_cnt  : out std_logic_vector(CNT_BITS-1 downto 0);
-			o_tc   : out std_logic
-		);
-	end component;
-	
 	signal n_rst : std_logic;
 	signal en_digit : std_logic;
 	signal sel_digit : std_logic_vector(1 downto 0);
@@ -71,7 +53,7 @@ begin
 	
 	n_rst <= reset;
 	
-	en_row_cnt_inst: component counter
+	en_row_cnt_inst: entity nios2_lprs2_pio_7segm_timer_qsys.counter
 	generic map(
 		CNT_MOD  => CLK_FREQ/2400,
 		CNT_BITS => 13
@@ -87,7 +69,7 @@ begin
 	);
 	
 	-- Time-multiplexing.
-	mux_row_or_digit_cnt_inst: component counter
+	mux_row_or_digit_cnt_inst: entity nios2_lprs2_pio_7segm_timer_qsys.counter
 	generic map(
 		CNT_MOD  => 4,
 		CNT_BITS => 2
