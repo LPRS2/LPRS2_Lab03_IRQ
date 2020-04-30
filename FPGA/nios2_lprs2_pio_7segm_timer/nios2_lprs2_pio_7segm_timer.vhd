@@ -3,7 +3,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 
-library work;
+library lprs2_qsys;
 
 entity nios2_lprs2_pio_7segm_timer is
 	generic(
@@ -51,24 +51,11 @@ architecture nios2_lprs2_pio_7segm_timer_arch of nios2_lprs2_pio_7segm_timer is
 	signal sel_digit   : std_logic_vector(1 downto 0);
 	signal n_mux_digit : std_logic_vector(7 downto 0);
 	
-	
-	component nios2_lprs2_pio_7segm_timer_qsys is
-		port (
-			clk_clk        : in  std_logic                    := 'X';             -- clk
-			pio_pi         : in  std_logic_vector(7 downto 0) := (others => 'X'); -- pi
-			pio_po         : out std_logic_vector(7 downto 0);                    -- po
-			rst_reset      : in  std_logic                    := 'X';             -- reset
-			segm_mux_digit : out std_logic_vector(7 downto 0);                    -- mux_digit
-			segm_sel_digit : out std_logic_vector(1 downto 0)                     -- sel_digit
-		);
-	end component nios2_lprs2_pio_7segm_timer_qsys;
-	
-	
 begin
 	
 	rst <= not in_rst;
 	
-	u0 : component nios2_lprs2_pio_7segm_timer_qsys
+	u0 : entity lprs2_qsys.lprs2_qsys
 	port map (
 		clk_clk    => i_clk,
 		rst_reset  => rst,

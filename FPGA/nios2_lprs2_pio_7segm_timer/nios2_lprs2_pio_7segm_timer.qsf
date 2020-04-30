@@ -206,6 +206,6 @@ set_instance_assignment -name IO_STANDARD "3.3 V SCHMITT TRIGGER" -to i_pb_rst
 set_instance_assignment -name IO_STANDARD "3.3 V SCHMITT TRIGGER" -to i_pb_up
 set_instance_assignment -name IO_MAXIMUM_TOGGLE_RATE "100 Hz" -to in_rst
 set_global_assignment -name INTERNAL_FLASH_UPDATE_MODE "SINGLE IMAGE"
-set_global_assignment -name QSYS_FILE nios2_lprs2_pio_7segm_timer_qsys.qsys
+set_global_assignment -name QSYS_FILE lprs2_qsys.qsys
 set_global_assignment -name VHDL_FILE nios2_lprs2_pio_7segm_timer.vhd
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

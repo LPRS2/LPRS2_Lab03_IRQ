@@ -4,7 +4,7 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 use ieee.std_logic_arith.all;
 
-library nios2_lprs2_pio_7segm_timer_qsys;
+library lprs2_qsys;
 
 entity lprs2_7segm is
 	port(
@@ -53,7 +53,7 @@ begin
 	
 	n_rst <= reset;
 	
-	en_row_cnt_inst: entity nios2_lprs2_pio_7segm_timer_qsys.counter
+	en_row_cnt_inst: entity lprs2_qsys.counter
 	generic map(
 		CNT_MOD  => CLK_FREQ/2400,
 		CNT_BITS => 13
@@ -69,7 +69,7 @@ begin
 	);
 	
 	-- Time-multiplexing.
-	mux_row_or_digit_cnt_inst: entity nios2_lprs2_pio_7segm_timer_qsys.counter
+	mux_row_or_digit_cnt_inst: entity lprs2_qsys.counter
 	generic map(
 		CNT_MOD  => 4,
 		CNT_BITS => 2

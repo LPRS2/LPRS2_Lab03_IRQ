@@ -49,7 +49,7 @@
          type = "String";
       }
    }
-   element nios2_lprs2_pio_7segm_timer_qsys
+   element lprs2_qsys
    {
       datum _originalDeviceFamily
       {
@@ -57,7 +57,7 @@
          type = "String";
       }
    }
-   element nios2_lprs2_pio_7segm_timer_qsys
+   element lprs2_qsys
    {
       datum _originalDeviceFamily
       {
@@ -65,7 +65,7 @@
          type = "String";
       }
    }
-   element nios2_lprs2_pio_7segm_timer_qsys
+   element lprs2_qsys
    {
       datum _originalDeviceFamily
       {

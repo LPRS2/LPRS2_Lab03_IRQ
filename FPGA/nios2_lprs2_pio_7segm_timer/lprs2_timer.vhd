@@ -4,7 +4,7 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 use ieee.std_logic_arith.all;
 
-library nios2_lprs2_pio_7segm_timer_qsys;
+library lprs2_qsys;
 
 entity lprs2_timer is
 	port(
@@ -159,7 +159,7 @@ begin
 		end if;
 	end process;
 	
-	irq_pulse_inst: entity nios2_lprs2_pio_7segm_timer_qsys.monostable_multivibrator
+	irq_pulse_inst: entity lprs2_qsys.monostable_multivibrator
 	port map(
 		i_clk     => clk,
 		i_rst     => reset,
