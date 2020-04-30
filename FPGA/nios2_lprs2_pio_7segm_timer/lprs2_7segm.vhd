@@ -69,9 +69,9 @@ begin
 	
 	--------------------
 	
-	n_rst = reset;
+	n_rst <= reset;
 	
-	en_row_cnt_inst: entity work.counter
+	en_row_cnt_inst: counter
 	generic map(
 		CNT_MOD  => CLK_FREQ/2400,
 		CNT_BITS => 13
@@ -87,7 +87,7 @@ begin
 	);
 	
 	-- Time-multiplexing.
-	mux_row_or_digit_cnt_inst: entity work.counter
+	mux_row_or_digit_cnt_inst: counter
 	generic map(
 		CNT_MOD  => 4,
 		CNT_BITS => 2

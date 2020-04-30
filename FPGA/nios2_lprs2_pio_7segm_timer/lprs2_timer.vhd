@@ -132,6 +132,8 @@ begin
 								-- wrap_flag is RO.
 								wrapped_flag <= avs_writedata(2);
 							end if;
+						when others =>
+							null;
 					end case;
 				
 				-- magic
