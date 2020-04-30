@@ -15,7 +15,7 @@ entity lprs2_timer is
 		-- Avalon slave.
 		avs_chipselect   : in  std_logic;
 		-- Word address.
-		avs_address      : in  std_logic_vector(5 downto 0);
+		avs_address      : in  std_logic_vector(4 downto 0);
 		avs_write        : in  std_logic;
 		avs_writedata    : in  std_logic_vector(31 downto 0);
 		avs_read         : in  std_logic;
@@ -28,23 +28,22 @@ end entity;
 
 architecture lprs2_timer_arch of lprs2_timer is
 	
-	signal cnt_reg : std_logic_vector(31 downto 0);
-	signal wrap : std_logic;
-	signal wrap_cnt : std_logic_vector(31 downto 0);
+	signal addr_ri : std_logic_vector(3 downto 0);
+	signal addr_gr : std_logic_vector(3 downto 0);
+	signal addr    : std_logic_vector(7 downto 0);
+	signal wr      : std_logic;
+	
+	signal cnt_reg   : std_logic_vector(31 downto 0);
+	signal wrap      : std_logic;
+	signal wrap_cnt  : std_logic_vector(31 downto 0);
 	signal reset_cnt : std_logic_vector(31 downto 0);
-	signal next_cnt : std_logic_vector(31 downto 0);
-	
-	signal addr_ri    : std_logic_vector(3 downto 0);
-	signal addr_gr    : std_logic_vector(3 downto 0);
-	signal addr       : std_logic_vector(7 downto 0);
-	signal modulo_reg : std_logic_vector(31 downto 0);
-	signal reset_flag : std_logic;
-	signal pause_flag : std_logic;
-	signal wrap_flag : std_logic;
+	signal next_cnt  : std_logic_vector(31 downto 0);
+
+	signal modulo_reg   : std_logic_vector(31 downto 0);
+	signal reset_flag   : std_logic;
+	signal pause_flag   : std_logic;
+	signal wrap_flag    : std_logic;
 	signal wrapped_flag : std_logic;
-	
-	
-	signal wr : std_logic;
 begin
 	
 	wrap <= '1' when cnt_reg = modulo_reg else '0';
@@ -90,7 +89,7 @@ begin
 				
 				--TODO If this work make some funs and const,
 				-- for nicer, less error prone layout.
-				-- ctrl/status packed flags
+				-- ctrl/status packedflags
 				when x"02" | x"12" =>
 					case addr_gr is
 						when x"0" =>

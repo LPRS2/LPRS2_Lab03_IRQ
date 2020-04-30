@@ -8,7 +8,7 @@
 #define WAIT_UNITL_TRUE(x) while(!(x)){}
 
 #define pio_p32 ((volatile uint32_t*)SW_AND_LED_PIO_BASE)
-#define digits_p32 ((volatile uint32_t*)TIME_MUXED_7SEGM_BASE)
+#define digits_p32 ((volatile uint32_t*)(TIME_MUXED_7SEGM_BASE+0x20))
 #define timer_p32 ((volatile uint32_t*)TIMER_BASE)
 
 #define TIMER_CNT 0
@@ -37,6 +37,8 @@ static void timer_isr(void * context) {
 	static uint8_t x = 0;
 	x++;
 	pio.sw_led_packed = x;
+	digits_p32[1] = x & 0xf;
+	digits_p32[3] = x>>4;
 }
 
 int main() {

@@ -15,7 +15,7 @@ entity lprs2_7segm is
 		-- Avalon slave.
 		avs_chipselect   : in  std_logic;
 		-- Word address.
-		avs_address      : in  std_logic_vector(3 downto 0);
+		avs_address      : in  std_logic_vector(4 downto 0);
 		avs_write        : in  std_logic;
 		avs_writedata    : in  std_logic_vector(31 downto 0);
 		avs_read         : in  std_logic;
@@ -32,7 +32,13 @@ architecture lprs2_7segm_arch of lprs2_7segm is
 	-- TODO Is there way for Qsys to propagate this constant.
 	constant CLK_FREQ : positive := 12000000;
 	
-	signal n_rst : std_logic;
+	signal n_rst   : std_logic;
+	
+	signal addr_ri : std_logic_vector(3 downto 0);
+	signal addr_gr : std_logic_vector(3 downto 0);
+	signal addr    : std_logic_vector(7 downto 0);
+	signal wr      : std_logic;
+	
 	signal en_digit : std_logic;
 	signal sel_digit : std_logic_vector(1 downto 0);
 	
@@ -43,15 +49,70 @@ architecture lprs2_7segm_arch of lprs2_7segm is
 	signal segm_afbgecd : std_logic_vector(6 downto 0);
 begin
 	
-	--TODO
-	digit_array(0) <= x"0";
-	digit_array(1) <= x"1";
-	digit_array(2) <= x"2";
-	digit_array(3) <= x"3";
+	addr_ri <= "0" & avs_address(2 downto 0);
+	addr_gr <= "00" & avs_address(4 downto 3);
+	addr <= addr_gr & addr_ri;
+	wr <= avs_chipselect and avs_write;
+	process(clk, reset)
+	begin
+		if reset = '1' then
+			digit_array(3) <= x"3";
+			digit_array(2) <= x"2";
+			digit_array(1) <= x"1";
+			digit_array(0) <= x"0";
+		elsif rising_edge(clk) then
+			
+			-- Because flags.
+			avs_readdata <= (others => '0');
+			case addr is
+				when x"00" | x"11" =>
+					avs_readdata(3 downto 0) <= digit_array(0);
+					if wr = '1' then
+						digit_array(0) <= avs_writedata(3 downto 0);
+					end if;
+					
+				when x"01" | x"13" =>
+					avs_readdata(3 downto 0) <= digit_array(1);
+					if wr = '1' then
+						digit_array(1) <= avs_writedata(3 downto 0);
+					end if;
+					
+				when x"02" | x"12" =>
+					avs_readdata(3 downto 0) <= digit_array(2);
+					if wr = '1' then
+						digit_array(2) <= avs_writedata(3 downto 0);
+					end if;
+					
+				when x"03" | x"10" =>
+					avs_readdata(3 downto 0) <= digit_array(3);
+					if wr = '1' then
+						digit_array(3) <= avs_writedata(3 downto 0);
+					end if;
+					
+				-- packed
+				when x"04" | x"17" =>
+					avs_readdata <= 
+						x"0" & digit_array(3) &
+						x"0" & digit_array(2) &
+						x"0" & digit_array(1) &
+						x"0" & digit_array(0);
+					if wr = '1' then
+						digit_array(3) <= avs_writedata(27 downto 24);
+						digit_array(2) <= avs_writedata(19 downto 16);
+						digit_array(1) <= avs_writedata(11 downto  8);
+						digit_array(0) <= avs_writedata( 3 downto  0);
+					end if;
+					
+				when others =>
+					avs_readdata <= x"deadbeef";
+					-- Other regs are RO.
+			end case;
+		end if;
+	end process;
 	
 	--------------------
 	
-	n_rst <= reset;
+	n_rst <= not reset;
 	
 	en_row_cnt_inst: entity lprs2_qsys.counter
 	generic map(
