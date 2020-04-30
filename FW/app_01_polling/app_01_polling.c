@@ -13,6 +13,7 @@
 #define TIMER_CNT 0
 #define TIMER_MODULO 1
 #define TIMER_CTRL_STATUS 2
+#define TIMER_WRAPPED 7
 
 typedef struct {
 	// reg 0-7
@@ -47,9 +48,9 @@ int main() {
 		// Read inputs.
 
 		// Poll wrapped flag.
-		WAIT_UNITL_TRUE(timer_p32[TIMER_CTRL_STATUS] & (1 << 3));
+		WAIT_UNITL_TRUE(timer_p32[TIMER_WRAPPED]);
 		// Clear wrapped flag
-		timer_p32[TIMER_CTRL_STATUS] &= ~(1 << 3);
+		timer_p32[TIMER_WRAPPED] = 0;
 
 		///////////////////
 		// Calculate state.
