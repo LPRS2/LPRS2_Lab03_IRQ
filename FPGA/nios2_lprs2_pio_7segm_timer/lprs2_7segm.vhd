@@ -34,9 +34,41 @@ architecture lprs2_7segm_arch of lprs2_7segm is
 	
 	signal n_rst   : std_logic;
 	
-	signal addr_ri : std_logic_vector(3 downto 0);
-	signal addr_gr : std_logic_vector(3 downto 0);
-	signal addr    : std_logic_vector(7 downto 0);
+	subtype t_half_addr is std_logic_vector(3 downto 0);
+	subtype t_addr is std_logic_vector(7 downto 0);
+	type t_mem_map is array (0 to 3) of std_logic_vector(4*4-1 downto 0);
+	constant MM : t_mem_map := (
+		x"0123",
+		x"1320",
+		x"0321",
+		x"0321"
+	);
+	function r(
+		gr : integer range 0 to 3,
+		s : integer range 0 to 3
+	)
+	return t_addr is
+		variable n : integer;
+		variable addr_ri : t_half_addr;
+	begin
+		n := 3 - s;
+		addr_ri := MM(gr)(n*4+3 downto n*4);
+		return conv_std_logic_vector(gr, 4) & addr_ri;
+	end function;
+	function f(
+		gr : integer range 0 to 3,
+		s : integer range 0 to 3
+	)
+	return range is
+		variable ri : integer;
+	begin
+		ri := r(gr, s);
+		return ri*8+3 downto ri*8
+	end function;
+	
+	signal addr_ri : t_half_addr;
+	signal addr_gr : t_half_addr;
+	signal addr    : t_addr;
 	signal wr      : std_logic;
 	
 	signal en_digit : std_logic;
@@ -65,42 +97,74 @@ begin
 			-- Because flags.
 			avs_readdata <= (others => '0');
 			case addr is
-				when x"00" | x"11" =>
+				when r(0, 0) | r(1, 0) | r(2, 0) | r(3, 0) =>
 					avs_readdata(3 downto 0) <= digit_array(0);
 					if wr = '1' then
 						digit_array(0) <= avs_writedata(3 downto 0);
 					end if;
 					
-				when x"01" | x"13" =>
+				when r(0, 1) | r(1, 1) | r(2, 1) | r(3, 1) =>
 					avs_readdata(3 downto 0) <= digit_array(1);
 					if wr = '1' then
 						digit_array(1) <= avs_writedata(3 downto 0);
 					end if;
 					
-				when x"02" | x"12" =>
+				when r(0, 2) | r(1, 2) | r(2, 2) | r(3, 2) =>
 					avs_readdata(3 downto 0) <= digit_array(2);
 					if wr = '1' then
 						digit_array(2) <= avs_writedata(3 downto 0);
 					end if;
 					
-				when x"03" | x"10" =>
+				when r(0, 3) | r(1, 3) | r(2, 3) | r(3, 3) =>
 					avs_readdata(3 downto 0) <= digit_array(3);
 					if wr = '1' then
 						digit_array(3) <= avs_writedata(3 downto 0);
 					end if;
 					
 				-- packed
-				when x"04" | x"17" =>
-					avs_readdata <= 
-						x"0" & digit_array(3) &
-						x"0" & digit_array(2) &
-						x"0" & digit_array(1) &
-						x"0" & digit_array(0);
+				when x"04" =>
+					avs_readdata(f(0, 0)) <= digit_array(0);
+					avs_readdata(f(0, 1)) <= digit_array(1);
+					avs_readdata(f(0, 2)) <= digit_array(2);
+					avs_readdata(f(0, 3)) <= digit_array(3);
 					if wr = '1' then
-						digit_array(3) <= avs_writedata(27 downto 24);
-						digit_array(2) <= avs_writedata(19 downto 16);
-						digit_array(1) <= avs_writedata(11 downto  8);
-						digit_array(0) <= avs_writedata( 3 downto  0);
+						digit_array(0) <= avs_writedata(f(0, 0));
+						digit_array(1) <= avs_writedata(f(0, 1));
+						digit_array(2) <= avs_writedata(f(0, 2));
+						digit_array(3) <= avs_writedata(f(0, 3));
+					end if;
+				when x"14" =>
+					avs_readdata(f(1, 0)) <= digit_array(0);
+					avs_readdata(f(1, 1)) <= digit_array(1);
+					avs_readdata(f(1, 2)) <= digit_array(2);
+					avs_readdata(f(1, 3)) <= digit_array(3);
+					if wr = '1' then
+						digit_array(0) <= avs_writedata(f(1, 0));
+						digit_array(1) <= avs_writedata(f(1, 1));
+						digit_array(2) <= avs_writedata(f(1, 2));
+						digit_array(3) <= avs_writedata(f(1, 3));
+					end if;
+				when x"24" =>
+					avs_readdata(f(2, 0)) <= digit_array(0);
+					avs_readdata(f(2, 1)) <= digit_array(1);
+					avs_readdata(f(2, 2)) <= digit_array(2);
+					avs_readdata(f(2, 3)) <= digit_array(3);
+					if wr = '1' then
+						digit_array(0) <= avs_writedata(f(2, 0));
+						digit_array(1) <= avs_writedata(f(2, 1));
+						digit_array(2) <= avs_writedata(f(2, 2));
+						digit_array(3) <= avs_writedata(f(2, 3));
+					end if;
+				when x"34" =>
+					avs_readdata(f(3, 0)) <= digit_array(0);
+					avs_readdata(f(3, 1)) <= digit_array(1);
+					avs_readdata(f(3, 2)) <= digit_array(2);
+					avs_readdata(f(3, 3)) <= digit_array(3);
+					if wr = '1' then
+						digit_array(0) <= avs_writedata(f(3, 0));
+						digit_array(1) <= avs_writedata(f(3, 1));
+						digit_array(2) <= avs_writedata(f(3, 2));
+						digit_array(3) <= avs_writedata(f(3, 3));
 					end if;
 					
 				when others =>

@@ -28,9 +28,44 @@ end entity;
 
 architecture lprs2_timer_arch of lprs2_timer is
 	
-	signal addr_ri : std_logic_vector(3 downto 0);
-	signal addr_gr : std_logic_vector(3 downto 0);
-	signal addr    : std_logic_vector(7 downto 0);
+	subtype t_half_addr is std_logic_vector(3 downto 0);
+	subtype t_addr is std_logic_vector(7 downto 0);
+	type t_mem_map is array (0 to 3) of std_logic_vector(8*4-1 downto 0);
+	constant MM : t_mem_map := (
+		x"01230123",
+		x"03213012",
+		x"03122301",
+		x"32103012"
+	);
+	function r(
+		gr : integer range 0 to 3,
+		ri : integer range 0 to 7
+	)
+	return t_addr is
+		variable n : integer;
+		variable addr_ri : t_half_addr;
+	begin
+		n := 7 - tf;
+		addr_ri := MM(gr)(n*4+3 downto n*4);
+		if ri >= 4 then
+			addr_ri := addr_ri + 4;
+		end if;
+		return conv_std_logic_vector(gr, 4) & addr_ri;
+	end function;
+	function f(
+		gr : integer range 0 to 3,
+		tf : integer range 0 to 3
+	)
+	return natural is
+		variable n : integer;
+		variable addr_ri : t_half_addr;
+	begin
+		n := 3 - tf;
+		return conv_integer(MM(gr)(n*4+3 downto n*4));
+	end function;
+	signal addr_ri : t_half_addr;
+	signal addr_gr : t_half_addr;
+	signal addr    : t_addr;
 	signal wr      : std_logic;
 	
 	signal cnt_reg   : std_logic_vector(31 downto 0);
@@ -44,6 +79,8 @@ architecture lprs2_timer_arch of lprs2_timer is
 	signal pause_flag   : std_logic;
 	signal wrap_flag    : std_logic;
 	signal wrapped_flag : std_logic;
+	
+	
 begin
 	
 	wrap <= '1' when cnt_reg = modulo_reg else '0';
@@ -74,14 +111,14 @@ begin
 			avs_readdata <= (others => '0');
 			case addr is
 				-- cnt
-				when x"00" | x"10" =>
+				when r(0, 0) | r(1, 0) | r(2, 0) | r(3, 0) =>
 					avs_readdata <= cnt_reg;
 					if wr = '1' then
 						cnt_reg <= avs_writedata;
 					end if;
 					
 				-- modulo
-				when x"01" | x"13" =>
+				when r(0, 1) | r(1, 1) | r(2, 1) | r(3, 1) =>
 					avs_readdata <= modulo_reg;
 					if wr = '1' then
 						modulo_reg <= avs_writedata;
@@ -90,54 +127,76 @@ begin
 				--TODO If this work make some funs and const,
 				-- for nicer, less error prone layout.
 				-- ctrl/status packedflags
-				when x"02" | x"12" =>
+				when r(0, 2) | r(1, 2) | r(2, 2) | r(3, 2) =>
 					case addr_gr is
 						when x"0" =>
-							avs_readdata(0) <= reset_flag;
-							avs_readdata(1) <= pause_flag;
-							avs_readdata(2) <= wrap_flag;
-							avs_readdata(3) <= wrapped_flag;
+							avs_readdata(f(0, 0)) <= reset_flag;
+							avs_readdata(f(0, 1)) <= pause_flag;
+							avs_readdata(f(0, 2)) <= wrap_flag;
+							avs_readdata(f(0, 3)) <= wrapped_flag;
 							if wr = '1' then
-								reset_flag <= avs_writedata(0);
-								pause_flag <= avs_writedata(1);
+								reset_flag   <= avs_writedata(f(0, 0));
+								pause_flag   <= avs_writedata(f(0, 1));
 								-- wrap_flag is RO.
-								wrapped_flag <= avs_writedata(3);
+								wrapped_flag <= avs_writedata(f(0, 3));
 							end if;
 						when x"1" =>
-							avs_readdata(3) <= reset_flag;
-							avs_readdata(0) <= pause_flag;
-							avs_readdata(1) <= wrap_flag;
-							avs_readdata(2) <= wrapped_flag;
+							avs_readdata(f(1, 0)) <= reset_flag;
+							avs_readdata(f(1, 1)) <= pause_flag;
+							avs_readdata(f(1, 2)) <= wrap_flag;
+							avs_readdata(f(1, 3)) <= wrapped_flag;
 							if wr = '1' then
-								reset_flag <= avs_writedata(3);
-								pause_flag <= avs_writedata(0);
+								reset_flag   <= avs_writedata(f(1, 0));
+								pause_flag   <= avs_writedata(f(1, 1));
 								-- wrap_flag is RO.
-								wrapped_flag <= avs_writedata(2);
+								wrapped_flag <= avs_writedata(f(1, 3));
+							end if;
+						when x"2" =>
+							avs_readdata(f(2, 0)) <= reset_flag;
+							avs_readdata(f(2, 1)) <= pause_flag;
+							avs_readdata(f(2, 2)) <= wrap_flag;
+							avs_readdata(f(2, 3)) <= wrapped_flag;
+							if wr = '1' then
+								reset_flag   <= avs_writedata(f(2, 0));
+								pause_flag   <= avs_writedata(f(2, 1));
+								-- wrap_flag is RO.
+								wrapped_flag <= avs_writedata(f(2, 3));
+							end if;
+						when x"3" =>
+							avs_readdata(f(3, 0)) <= reset_flag;
+							avs_readdata(f(3, 1)) <= pause_flag;
+							avs_readdata(f(3, 2)) <= wrap_flag;
+							avs_readdata(f(3, 3)) <= wrapped_flag;
+							if wr = '1' then
+								reset_flag   <= avs_writedata(f(3, 0));
+								pause_flag   <= avs_writedata(f(3, 1));
+								-- wrap_flag is RO.
+								wrapped_flag <= avs_writedata(f(3, 3));
 							end if;
 						when others =>
 							null;
 					end case;
 				
 				-- magic
-				when x"03" | x"11" =>
+				when r(0, 3) | r(1, 3) | r(2, 3) | r(3, 3) =>
 					avs_readdata <= x"babadeda";
 					-- magic is RO.
 				
 				-- unpacked flags
-				when x"04" | x"17" =>
+				when r(0, 4) | r(1, 4) | r(2, 4) | r(3, 4) =>
 					avs_readdata(0) <= reset_flag;
 					if wr = '1' then
 						reset_flag <= avs_writedata(0);
 					end if;
-				when x"05" | x"14" =>
+				when r(0, 5) | r(1, 5) | r(2, 5) | r(3, 5) =>
 					avs_readdata(0) <= pause_flag;
 					if wr = '1' then
 						pause_flag <= avs_writedata(0);
 					end if;
-				when x"06" | x"15" =>
+				when r(0, 6) | r(1, 6) | r(2, 6) | r(3, 6) =>
 					avs_readdata(0) <= wrap_flag;
 					-- wrap_flag is RO.
-				when x"07" | x"16" =>
+				when r(0, 7) | r(1, 7) | r(2, 7) | r(3, 7) =>
 					avs_readdata(0) <= wrapped_flag;
 					if wr = '1' then
 						wrapped_flag <= avs_writedata(0);
