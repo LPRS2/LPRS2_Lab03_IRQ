@@ -2,11 +2,11 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Mar 14, 2020 9:17:48 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1584217068904</BspGeneratedUnixTimeStamp>
-        <BspGeneratedLocation>/home/micuri/STEM/Computer_Engineering/LPRS2_Labs/LPRS2_Lab03_IRQ/FW/bsp_nios2_lprs2_pio_7segm_timer</BspGeneratedLocation>
+        <BspGeneratedTimeStamp>Apr 30, 2020 3:58:41 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1588255121944</BspGeneratedUnixTimeStamp>
+        <BspGeneratedLocation>/home/micuri/STEM/Computer_Engineering/LPRS_Uber_Project_Source/Projects/LPRS2_Labs/IRQ/Source/LPRS2_Lab03_IRQ/FW/bsp_nios2_lprs2_pio_7segm_timer</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
-        <SopcDesignFile>../../FPGA/nios2_lprs2_pio_7segm_timer/nios2_lprs2_pio_7segm_timer_qsys.sopcinfo</SopcDesignFile>
+        <SopcDesignFile>../../FPGA/nios2_lprs2_pio_7segm_timer/lprs2_qsys.sopcinfo</SopcDesignFile>
         <JdiFile>default</JdiFile>
         <Cpu>nios2_cpu</Cpu>
         <SchemaVersion>1.9</SchemaVersion>
