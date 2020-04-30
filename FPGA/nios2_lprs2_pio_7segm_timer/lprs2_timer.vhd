@@ -90,7 +90,7 @@ begin
 				
 				--TODO If this work make some funs and const,
 				-- for nicer, less error prone layout.
-				-- flags
+				-- ctrl/status packed flags
 				when x"02" | x"12" =>
 					case addr_gr is
 						when x"0" =>
