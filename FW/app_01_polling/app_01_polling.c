@@ -1,3 +1,4 @@
+// Г31
 
 #include <stdint.h>
 #include "system.h"
@@ -22,6 +23,11 @@
 #define TIMER_PAUSE_FLAG (TIMER_PAUSE-4)
 #define TIMER_WRAP_FLAG (TIMER_WRAP-4)
 #define TIMER_WRAPPED_FLAG (TIMER_WRAPPED-4)
+
+#define SEGM_0 0
+#define SEGM_1 1
+#define SEGM_2 2
+#define SEGM_3 3
 
 typedef struct {
 	// reg 0-7
@@ -64,9 +70,9 @@ int main() {
 		///////////////////
 		// Read inputs.
 
-		// Poll wrapped flag.
+		// Poll wrapped flag (over packed).
 		WAIT_UNITL_TRUE(timer_p32[TIMER_CTRL_STAT] & 1<<TIMER_WRAPPED_FLAG);
-		// Clear wrapped flag
+		// Clear wrapped flag (over unpacked).
 		timer_p32[TIMER_WRAPPED] = 0;
 
 		///////////////////
@@ -76,7 +82,11 @@ int main() {
 
 		///////////////////
 		// Write outputs.
+		
 		pio.sw_led_packed = cnt;
+		
+		digits_p32[SEGM_0] = cnt & 0xf;
+		digits_p32[SEGM_1] = cnt>>4;
 	}
 
 	return 0;
