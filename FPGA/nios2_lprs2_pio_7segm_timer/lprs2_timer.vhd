@@ -38,14 +38,14 @@ architecture lprs2_timer_arch of lprs2_timer is
 		x"32103012"
 	);
 	function r(
-		gr : integer range 0 to 3,
+		gr : integer range 0 to 3;
 		ri : integer range 0 to 7
 	)
 	return t_addr is
 		variable n : integer;
 		variable addr_ri : t_half_addr;
 	begin
-		n := 7 - tf;
+		n := 7 - ri;
 		addr_ri := MM(gr)(n*4+3 downto n*4);
 		if ri >= 4 then
 			addr_ri := addr_ri + 4;
@@ -53,7 +53,7 @@ architecture lprs2_timer_arch of lprs2_timer is
 		return conv_std_logic_vector(gr, 4) & addr_ri;
 	end function;
 	function f(
-		gr : integer range 0 to 3,
+		gr : integer range 0 to 3;
 		tf : integer range 0 to 3
 	)
 	return natural is
