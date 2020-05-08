@@ -68,6 +68,15 @@ static void timer_isr(void * context) {
 }
 
 int main() {
+	printf("TIMER_CNT = 0x%08x\n",         timer_p32[TIMER_CNT]);
+	printf("TIMER_MODULO = 0x%08x\n",      timer_p32[TIMER_MODULO]);
+	printf("TIMER_CTRL_STATUS = 0x%08x\n", timer_p32[TIMER_CTRL_STATUS]);
+	printf("TIMER_MAGIC = 0x%08x\n",       timer_p32[TIMER_MAGIC]);
+	printf("TIMER_RESET = 0x%08x\n",       timer_p32[TIMER_RESET]);
+	printf("TIMER_PAUSE = 0x%08x\n",       timer_p32[TIMER_PAUSE]);
+	printf("TIMER_WRAP = 0x%08x\n",        timer_p32[TIMER_WRAP]);
+	printf("TIMER_WRAPPED = 0x%08x\n",     timer_p32[TIMER_WRAPPED]);
+
 	pio.sw_led_packed = 0x81; // For debugging purposes.
 
 	// Init IRQ.
@@ -81,7 +90,7 @@ int main() {
 
 
 	timer_p32[TIMER_MODULO] = 12000000; // modulo.
-	timer_p32[TIMER_CTRL_STAT] = 0; // Start it.
+	timer_p32[TIMER_CTRL_STATUS] = 0; // Start it.
 
 #if 1
 	printf("timer_p32 cnt reg:\n");

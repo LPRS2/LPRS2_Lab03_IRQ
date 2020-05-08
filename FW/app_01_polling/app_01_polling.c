@@ -71,7 +71,7 @@ int main() {
 		// Read inputs.
 
 		// Poll wrapped flag (over packed).
-		WAIT_UNITL_TRUE(timer_p32[TIMER_CTRL_STAT] & 1<<TIMER_WRAPPED_FLAG);
+		WAIT_UNITL_TRUE(timer_p32[TIMER_CTRL_STATUS] & 1<<TIMER_WRAPPED_FLAG);
 		// Clear wrapped flag (over unpacked).
 		timer_p32[TIMER_WRAPPED] = 0;
 
