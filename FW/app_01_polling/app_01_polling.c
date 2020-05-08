@@ -11,23 +11,22 @@
 #define digits_p32 ((volatile uint32_t*)TIME_MUXED_7SEGM_BASE)
 #define timer_p32 ((volatile uint32_t*)TIMER_BASE)
 
-#define TIMER_CNT 0
-#define TIMER_MODULO 1
-#define TIMER_CTRL_STATUS 2
-#define TIMER_MAGIC 3
-#define TIMER_RESET 4
-#define TIMER_PAUSE 5
-#define TIMER_WRAP 6
-#define TIMER_WRAPPED 7
-#define TIMER_RESET_FLAG (TIMER_RESET-4)
-#define TIMER_PAUSE_FLAG (TIMER_PAUSE-4)
-#define TIMER_WRAP_FLAG (TIMER_WRAP-4)
-#define TIMER_WRAPPED_FLAG (TIMER_WRAPPED-4)
-
-#define SEGM_0 0
-#define SEGM_1 1
-#define SEGM_2 2
-#define SEGM_3 3
+#define SEGM_0             0
+#define SEGM_1             1
+#define SEGM_2             2
+#define SEGM_3             3
+#define TIMER_CNT          0
+#define TIMER_MODULO       1
+#define TIMER_CTRL_STATUS  2
+#define TIMER_MAGIC        3
+#define TIMER_RESET_FLAG   0
+#define TIMER_PAUSE_FLAG   1
+#define TIMER_WRAP_FLAG    2
+#define TIMER_WRAPPED_FLAG 3
+#define TIMER_RESET        (TIMER_RESET_FLAG+4)
+#define TIMER_PAUSE        (TIMER_PAUSE_FLAG+4)
+#define TIMER_WRAP         (TIMER_WRAP_FLAG+4)
+#define TIMER_WRAPPED      (TIMER_WRAPPED_FLAG+4)
 
 typedef struct {
 	// reg 0-7
@@ -48,14 +47,14 @@ typedef struct {
 #define pio (*((volatile bf_pio*)SW_AND_LED_PIO_BASE))
 
 int main() {
-	printf("TIMER_CNT = 0x%08x\n",         timer_p32[TIMER_CNT]);
-	printf("TIMER_MODULO = 0x%08x\n",      timer_p32[TIMER_MODULO]);
-	printf("TIMER_CTRL_STATUS = 0x%08x\n", timer_p32[TIMER_CTRL_STATUS]);
-	printf("TIMER_MAGIC = 0x%08x\n",       timer_p32[TIMER_MAGIC]);
-	printf("TIMER_RESET = 0x%08x\n",       timer_p32[TIMER_RESET]);
-	printf("TIMER_PAUSE = 0x%08x\n",       timer_p32[TIMER_PAUSE]);
-	printf("TIMER_WRAP = 0x%08x\n",        timer_p32[TIMER_WRAP]);
-	printf("TIMER_WRAPPED = 0x%08x\n",     timer_p32[TIMER_WRAPPED]);
+	printf("TIMER_CNT         = 0x%08lx\n", timer_p32[TIMER_CNT]);
+	printf("TIMER_MODULO      = 0x%08lx\n", timer_p32[TIMER_MODULO]);
+	printf("TIMER_CTRL_STATUS = 0x%08lx\n", timer_p32[TIMER_CTRL_STATUS]);
+	printf("TIMER_MAGIC       = 0x%08lx\n", timer_p32[TIMER_MAGIC]);
+	printf("TIMER_RESET       = 0x%08lx\n", timer_p32[TIMER_RESET]);
+	printf("TIMER_PAUSE       = 0x%08lx\n", timer_p32[TIMER_PAUSE]);
+	printf("TIMER_WRAP        = 0x%08lx\n", timer_p32[TIMER_WRAP]);
+	printf("TIMER_WRAPPED     = 0x%08lx\n", timer_p32[TIMER_WRAPPED]);
 	
 	pio.sw_led_packed = 0x81; // For debugging purposes.
 
