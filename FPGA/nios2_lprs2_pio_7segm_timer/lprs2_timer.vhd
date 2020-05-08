@@ -124,9 +124,6 @@ begin
 						modulo_reg <= avs_writedata;
 					end if;
 				
-				--TODO If this work make some funs and const,
-				-- for nicer, less error prone layout.
-				-- ctrl/status packedflags
 				when r(0, 2) | r(1, 2) | r(2, 2) | r(3, 2) =>
 					case addr_gr is
 						when x"0" =>

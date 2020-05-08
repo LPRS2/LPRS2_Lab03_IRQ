@@ -96,6 +96,7 @@ int main() {
 	timer_p32[TIMER_MODULO] = 12000000; // modulo.
 	timer_p32[TIMER_CTRL_STATUS] = 0; // Start it.
 
+	// Doing something in background.
 #if 1
 	printf("timer_p32 cnt reg:\n");
 	for(int i = 0; i < 10; i++){

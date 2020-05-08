@@ -29,9 +29,7 @@ entity lprs2_7segm is
 end entity;
 
 architecture lprs2_7segm_arch of lprs2_7segm is
-	-- TODO Is there way for Qsys to propagate this constant.
-	constant CLK_FREQ : positive := 12000000;
-	
+
 	signal n_rst   : std_logic;
 	
 	subtype t_half_addr is std_logic_vector(3 downto 0);
@@ -184,8 +182,12 @@ begin
 	
 	en_row_cnt_inst: entity lprs2_qsys.counter
 	generic map(
-		CNT_MOD  => CLK_FREQ/2400,
-		CNT_BITS => 13
+		-- Clk -> Refresh rate:
+		-- 12MHz -> ~3kHz
+		-- 100MHz -> ~24kHz
+		-- Using high refresh rate, so it could be nicely recored by camera.
+		CNT_MOD  => 2**12,
+		CNT_BITS => 12
 	)
 	port map(
 		i_clk  => clk,
